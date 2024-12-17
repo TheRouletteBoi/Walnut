@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <glm/glm.hpp>
 
+#include <algorithm>
+
 namespace Walnut::UI {
 
 	namespace Colors
