@@ -23,6 +23,7 @@ namespace Walnut::UI {
 		template<typename... Args>
 		void AddMessage(std::string_view fmt, Args&&... args)
 		{
+			std::string s = std::format("Hello {}", "world");
 			std::string messageString = std::vformat(fmt, std::make_format_args(args...));
 			m_MessageHistory.push_back(messageString);
 		}

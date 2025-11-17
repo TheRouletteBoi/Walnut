@@ -99,6 +99,9 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 		create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
 		create_info.enabledExtensionCount = extensions_count;
 		create_info.ppEnabledExtensionNames = extensions;
+#ifdef WL_PLATFORM_MACOS
+		create_info.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+#endif
 #ifdef IMGUI_VULKAN_DEBUG_REPORT
 		// Enabling validation layers
 		const char* layers[] = { "VK_LAYER_KHRONOS_validation" };
@@ -442,7 +445,7 @@ namespace Walnut {
 
 			// NOTE(Yan): Undecorated windows are probably
 			//            also desired, so make this an option
-			// glfwWindowHint(GLFW_DECORATED, false);
+			//glfwWindowHint(GLFW_DECORATED, false);
 		}
 
 		GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
@@ -493,7 +496,14 @@ namespace Walnut {
 
 		uint32_t extensions_count = 0;
 		const char** extensions = glfwGetRequiredInstanceExtensions(&extensions_count);
+#ifdef WL_PLATFORM_MACOS
+		fprintf(stderr, "On Macos!\n");
+		std::vector<const char*> extra_extensions(extensions, extensions + extensions_count);
+		extra_extensions.push_back(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME);
+		SetupVulkan(extra_extensions.data(), extra_extensions.size());
+#else
 		SetupVulkan(extensions, extensions_count);
+#endif
 
 		// Create Window Surface
 		VkSurfaceKHR surface;

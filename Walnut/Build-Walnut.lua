@@ -43,6 +43,9 @@ project "Walnut"
       systemversion "latest"
       defines { "WL_PLATFORM_WINDOWS" }
 
+   filter "system:macosx"
+      defines { "WL_PLATFORM_MACOS" }
+
    filter "configurations:Debug"
       defines { "WL_DEBUG" }
       runtime "Debug"
