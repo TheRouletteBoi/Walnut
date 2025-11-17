@@ -15,7 +15,8 @@
 	url = https://github.com/g-truc/glm
 [submodule "vendor/GLFW"]
 	path = vendor/GLFW
-	url = https://github.com/TheCherno/GLFW
+	url = https://github.com/Hibyehello/GLFW
+	branch = MacOS
 [submodule "vendor/spdlog"]
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog
