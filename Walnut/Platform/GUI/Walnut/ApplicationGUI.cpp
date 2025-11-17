@@ -452,7 +452,7 @@ namespace Walnut {
 
 			// NOTE(Yan): Undecorated windows are probably
 			//            also desired, so make this an option
-			//glfwWindowHint(GLFW_DECORATED, false);
+			glfwWindowHint(GLFW_DECORATED, false);
 		}
 
 		GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
