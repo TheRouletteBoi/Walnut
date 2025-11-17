@@ -465,6 +465,16 @@ namespace Walnut {
 
 		m_WindowHandle = glfwCreateWindow(m_Specification.Width, m_Specification.Height, m_Specification.Name.c_str(), NULL, NULL);
 
+		if(videoMode->width < m_Specification.Width)
+		{
+			m_Specification.Width = videoMode->width;
+		}
+
+		if(videoMode->height < m_Specification.Height)
+		{
+			m_Specification.Height = videoMode->height;
+		}
+
 		if (m_Specification.CenterWindow)
 		{
 			glfwSetWindowPos(m_WindowHandle,
