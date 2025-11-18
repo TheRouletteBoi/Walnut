@@ -56,12 +56,14 @@ namespace Walnut::UI {
 		const float TextPadding = 8.0f;
 
 		ImGui::SetCursorPosY(TextPadding);
+		ImGui::Dummy(ImVec2(0, 0));
 		for (int i = 0; i < m_MessageHistory.size(); i++)
 		{
 			if (!m_Filter.PassFilter(m_MessageHistory[i].Message.c_str()))
 				continue;
 
 			ImGui::SetCursorPosX(TextPadding);
+			ImGui::Dummy(ImVec2(0, 0));
 
 			// Normally you would store more information in your item than just a string.
 			// (e.g. make Items[] an array of structure, store color/type etc.)
