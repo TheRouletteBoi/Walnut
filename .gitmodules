@@ -6,10 +6,6 @@
 	path = vendor/imgui
 	url = https://github.com/TheRouletteBoi/imgui.git
 	branch = docking
-[submodule "vendor/glfw"]
-	path = vendor/glfw
-	url = https://github.com/Hibyehello/glfw
-	branch = MacOS
 [submodule "vendor/glm"]
 	path = vendor/glm
 	url = https://github.com/g-truc/glm
@@ -22,4 +18,8 @@
 [submodule "Walnut-Modules/Walnut-Networking"]
 	path = Walnut-Modules/Walnut-Networking
 	url = https://github.com/TheRouletteBoi/Walnut-Networking.git
+	branch = MacOS
+[submodule "vendor/glfw"]
+	path = vendor/glfw
+	url = https://github.com/TheRouletteBoi/glfw.git
 	branch = MacOS
