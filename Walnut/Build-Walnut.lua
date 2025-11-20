@@ -1,8 +1,8 @@
 project "Walnut"
    kind "StaticLib"
    language "C++"
-   cppdialect "C++20"
-   targetdir "../../../build/bin/%{cfg.buildcfg}"
+   cppdialect "C++23"
+   targetdir "../../build/bin/%{cfg.buildcfg}"
    staticruntime "off"
 
    files
@@ -36,8 +36,8 @@ project "Walnut"
        "%{Library.Vulkan}",
    }
 
-   targetdir ("../../../build/bin/" .. outputdir .. "/%{prj.name}")
-   objdir ("../../../build/bin-int/" .. outputdir .. "/%{prj.name}")
+   targetdir ("../../build/bin/" .. outputdir .. "/%{prj.name}")
+   objdir ("../../build/bin-int/" .. outputdir .. "/%{prj.name}")
 
    filter "system:windows"
       systemversion "latest"

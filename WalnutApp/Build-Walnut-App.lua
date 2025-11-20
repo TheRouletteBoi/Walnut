@@ -1,8 +1,8 @@
 project "WalnutApp"
    kind "ConsoleApp"
    language "C++"
-   cppdialect "C++20"
-   targetdir "bin/%{cfg.buildcfg}"
+   cppdialect "C++23"
+   targetdir "../../build/bin/%{cfg.buildcfg}"
    staticruntime "off"
 
    files { "src/**.h", "src/**.cpp" }
@@ -24,8 +24,8 @@ project "WalnutApp"
         "Walnut"
     }
 
-   targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
+   targetdir ("../../build/bin/" .. outputdir .. "/%{prj.name}")
+   objdir ("../../build/bin-int/" .. outputdir .. "/%{prj.name}")
 
    filter "system:windows"
       systemversion "latest"

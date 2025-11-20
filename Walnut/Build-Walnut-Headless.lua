@@ -1,8 +1,8 @@
 project "Walnut-Headless"
    kind "StaticLib"
    language "C++"
-   cppdialect "C++20"
-   targetdir "bin/%{cfg.buildcfg}"
+   cppdialect "C++23"
+   targetdir "../../build/bin/%{cfg.buildcfg}"
    staticruntime "off"
 
    files
@@ -29,8 +29,8 @@ project "Walnut-Headless"
 
    defines { "WL_HEADLESS" }
 
-   targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
-   objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
+   targetdir ("../../build/bin/" .. outputdir .. "/%{prj.name}")
+   objdir ("../../build/bin-int/" .. outputdir .. "/%{prj.name}")
 
    filter "system:windows"
       systemversion "latest"
