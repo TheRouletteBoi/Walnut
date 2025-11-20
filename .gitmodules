@@ -4,7 +4,7 @@
 	branch = docking
 [submodule "vendor/imgui"]
 	path = vendor/imgui
-	url = https://github.com/Hibyehello/imgui
+	url = https://github.com/TheRouletteBoi/imgui.git
 	branch = docking
 [submodule "vendor/glfw"]
 	path = vendor/glfw
@@ -15,14 +15,14 @@
 	url = https://github.com/g-truc/glm
 [submodule "vendor/GLFW"]
 	path = vendor/GLFW
-	url = https://github.com/Hibyehello/GLFW
+	url = https://github.com/TheRouletteBoi/glfw.git
 	branch = MacOS
 [submodule "vendor/spdlog"]
 	path = vendor/spdlog
 	url = https://github.com/gabime/spdlog
 [submodule "vendor/yaml-cpp"]
 	path = vendor/yaml-cpp
-	url = https://github.com/TheCherno/yaml-cpp
+	url = https://github.com/TheRouletteBoi/yaml-cpp.git
 [submodule "Walnut-Modules/Walnut-Networking"]
 	path = Walnut-Modules/Walnut-Networking
 	url = https://github.com/TheRouletteBoi/Walnut-Networking.git
