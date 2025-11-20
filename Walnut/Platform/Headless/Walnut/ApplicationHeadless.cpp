@@ -59,7 +59,7 @@ namespace Walnut {
 			for (auto& layer : m_LayerStack)
 				layer->OnUpdate(m_TimeStep);
 
-			if (m_Specification.SleepDuration > 0.0f)
+			if (m_Specification.SleepDuration > 0)
 				std::this_thread::sleep_for(std::chrono::milliseconds(m_Specification.SleepDuration));
 
 			float time = GetTime();

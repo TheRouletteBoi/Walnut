@@ -16,7 +16,7 @@ namespace Walnut {
 		uint32_t Width = 1600;
 		uint32_t Height = 900;
 
-		uint64_t SleepDuration = 0;
+		uint64_t SleepDuration = 500;
 	};
 
 	class Application
