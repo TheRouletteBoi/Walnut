@@ -449,9 +449,7 @@ namespace Walnut {
 
 			// NOTE(Yan): Undecorated windows are probably
 			//            also desired, so make this an option
-#ifdef WL_PLATFORM_MACOS
-			glfwWindowHint(GLFW_DECORATED, false);
-#endif
+			//glfwWindowHint(GLFW_DECORATED, false);
 		}
 
 		GLFWmonitor* primaryMonitor = glfwGetPrimaryMonitor();
