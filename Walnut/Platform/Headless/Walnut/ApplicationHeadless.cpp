@@ -34,7 +34,7 @@ namespace Walnut {
 	void Application::Init()
 	{
 		// Intialize logging
-		Log::Init();
+		Log::Init(m_Specification.Name);
 	}
 
 	void Application::Shutdown()
