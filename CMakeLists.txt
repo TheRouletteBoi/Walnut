@@ -221,69 +221,169 @@ endif()
 set(WALNUT_NET_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Walnut-Modules/Walnut-Networking)
 
 file(GLOB WALNUT_NETWORKING_SOURCES
-    ${WALNUT_NET_DIR}/Source/*.h
-    ${WALNUT_NET_DIR}/Source/*.cpp
-    ${WALNUT_NET_DIR}/Source/Walnut/Networking/*.h
-    ${WALNUT_NET_DIR}/Source/Walnut/Networking/*.cpp
+        ${WALNUT_NET_DIR}/Source/*.h
+        ${WALNUT_NET_DIR}/Source/*.cpp
+        ${WALNUT_NET_DIR}/Source/Walnut/Networking/*.h
+        ${WALNUT_NET_DIR}/Source/Walnut/Networking/*.cpp
 )
 
-# Platform-specific networking sources
+# Platform-specific source glob only (no linking yet)
 if(APPLE)
     file(GLOB_RECURSE WALNUT_NETWORKING_PLATFORM_SOURCES
-        ${WALNUT_NET_DIR}/Platform/MacOS/*.h
-        ${WALNUT_NET_DIR}/Platform/MacOS/*.cpp
+            ${WALNUT_NET_DIR}/Platform/MacOS/*.h
+            ${WALNUT_NET_DIR}/Platform/MacOS/*.cpp
     )
     set(GNS_LIB_DIR ${WALNUT_NET_DIR}/vendor/GameNetworkingSockets/bin/Macos)
 elseif(WIN32)
     file(GLOB_RECURSE WALNUT_NETWORKING_PLATFORM_SOURCES
-        ${WALNUT_NET_DIR}/Platform/Windows/*.h
-        ${WALNUT_NET_DIR}/Platform/Windows/*.cpp
+            ${WALNUT_NET_DIR}/Platform/Windows/*.h
+            ${WALNUT_NET_DIR}/Platform/Windows/*.cpp
     )
     set(GNS_LIB_DIR ${WALNUT_NET_DIR}/vendor/GameNetworkingSockets/bin/Windows)
 elseif(UNIX)
     file(GLOB_RECURSE WALNUT_NETWORKING_PLATFORM_SOURCES
-        ${WALNUT_NET_DIR}/Platform/Linux/*.h
-        ${WALNUT_NET_DIR}/Platform/Linux/*.cpp
+            ${WALNUT_NET_DIR}/Platform/Linux/*.h
+            ${WALNUT_NET_DIR}/Platform/Linux/*.cpp
     )
     set(GNS_LIB_DIR ${WALNUT_NET_DIR}/vendor/GameNetworkingSockets/bin/Linux)
 endif()
 
-add_library(Walnut-Networking STATIC 
-    ${WALNUT_NETWORKING_SOURCES} 
-    ${WALNUT_NETWORKING_PLATFORM_SOURCES}
+# Target must be created before any target_* calls
+add_library(Walnut-Networking STATIC
+        ${WALNUT_NETWORKING_SOURCES}
+        ${WALNUT_NETWORKING_PLATFORM_SOURCES}
 )
 
 target_include_directories(Walnut-Networking PUBLIC
-    ${WALNUT_NET_DIR}/Source
-    ${WALNUT_NET_DIR}/vendor/GameNetworkingSockets/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/Walnut/Source
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
-    ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
+        ${WALNUT_NET_DIR}/Source
+        ${WALNUT_NET_DIR}/vendor/GameNetworkingSockets/include
+        ${CMAKE_CURRENT_SOURCE_DIR}/Walnut/Source
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glm
+        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/spdlog/include
 )
 
-# Add GUI-specific includes only when not headless
 if(NOT WL_HEADLESS)
     target_include_directories(Walnut-Networking PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
-        ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
+            ${CMAKE_CURRENT_SOURCE_DIR}/vendor/imgui
+            ${CMAKE_CURRENT_SOURCE_DIR}/vendor/glfw/include
     )
 endif()
 
+# Platform-specific linking
 if(APPLE)
     target_include_directories(Walnut-Networking PRIVATE
-        ${WALNUT_NET_DIR}/Platform/MacOS
+            ${WALNUT_NET_DIR}/Platform/MacOS
     )
+
+    function(add_static_lib NAME)
+        add_library(${NAME} STATIC IMPORTED)
+        set_target_properties(${NAME} PROPERTIES
+                IMPORTED_LOCATION ${GNS_LIB_DIR}/lib${NAME}.a
+        )
+    endfunction()
+
+    add_static_lib(GameNetworkingSockets_s)
+    add_static_lib(ssl)
+    add_static_lib(crypto)
+    add_static_lib(protobuf)
+    add_static_lib(protobuf-lite)
+    add_static_lib(upb)
+    add_static_lib(utf8_range)
+    add_static_lib(utf8_validity)
+
+    foreach(ABSL_LIB
+            absl_base absl_borrowed_fixup_buffer absl_city absl_civil_time
+            absl_cord_internal absl_cord absl_cordz_functions absl_cordz_handle
+            absl_cordz_info absl_cordz_sample_token absl_crc_cord_state
+            absl_crc_cpu_detect absl_crc_internal absl_crc32c
+            absl_debugging_internal absl_decode_rust_punycode absl_demangle_internal
+            absl_demangle_rust absl_die_if_null absl_examine_stack
+            absl_exponential_biased absl_failure_signal_handler
+            absl_flags_commandlineflag_internal absl_flags_commandlineflag
+            absl_flags_config absl_flags_internal absl_flags_marshalling
+            absl_flags_parse absl_flags_private_handle_accessor
+            absl_flags_program_name absl_flags_reflection absl_flags_usage_internal
+            absl_flags_usage absl_generic_printer_internal absl_graphcycles_internal
+            absl_hash absl_hashtable_profiler absl_hashtablez_sampler absl_int128
+            absl_kernel_timeout_internal absl_leak_check absl_log_entry
+            absl_log_flags absl_log_globals absl_log_initialize
+            absl_log_internal_check_op absl_log_internal_conditions
+            absl_log_internal_fnmatch absl_log_internal_format
+            absl_log_internal_globals absl_log_internal_log_sink_set
+            absl_log_internal_message absl_log_internal_nullguard
+            absl_log_internal_proto absl_log_internal_structured_proto
+            absl_log_severity absl_log_sink absl_malloc_internal
+            absl_periodic_sampler absl_poison absl_profile_builder
+            absl_random_distributions absl_random_internal_distribution_test_util
+            absl_random_internal_entropy_pool absl_random_internal_platform
+            absl_random_internal_randen_hwaes_impl absl_random_internal_randen_hwaes
+            absl_random_internal_randen_slow absl_random_internal_randen
+            absl_random_internal_seed_material absl_random_seed_gen_exception
+            absl_random_seed_sequences absl_raw_hash_set absl_raw_logging_internal
+            absl_scoped_set_env absl_spinlock_wait absl_stacktrace absl_status
+            absl_statusor absl_str_format_internal absl_strerror
+            absl_strings_internal absl_strings absl_symbolize absl_synchronization
+            absl_throw_delegate absl_time_zone absl_time absl_tracing_internal
+            absl_utf8_for_code_point absl_vlog_config_internal
+    )
+        add_static_lib(${ABSL_LIB})
+    endforeach()
+
+    target_link_libraries(Walnut-Networking PUBLIC
+            GameNetworkingSockets_s
+            ssl crypto
+            protobuf protobuf-lite upb utf8_range utf8_validity
+            absl_base absl_strings absl_strings_internal absl_str_format_internal
+            absl_synchronization absl_time absl_time_zone absl_civil_time
+            absl_hash absl_city absl_int128 absl_raw_hash_set
+            absl_hashtablez_sampler absl_hashtable_profiler
+            absl_status absl_statusor absl_log_entry absl_log_globals
+            absl_log_initialize absl_log_internal_message absl_log_internal_format
+            absl_log_internal_globals absl_log_internal_log_sink_set
+            absl_log_internal_check_op absl_log_internal_conditions
+            absl_log_internal_nullguard absl_log_internal_proto
+            absl_log_internal_structured_proto absl_log_severity absl_log_sink
+            absl_log_flags absl_flags_parse absl_flags_config absl_flags_internal
+            absl_flags_commandlineflag absl_flags_commandlineflag_internal
+            absl_flags_marshalling absl_flags_reflection absl_flags_program_name
+            absl_flags_usage absl_flags_usage_internal
+            absl_flags_private_handle_accessor absl_raw_logging_internal
+            absl_spinlock_wait absl_malloc_internal absl_throw_delegate
+            absl_exponential_biased absl_graphcycles_internal
+            absl_kernel_timeout_internal absl_cord absl_cord_internal
+            absl_cordz_functions absl_cordz_handle absl_cordz_info
+            absl_cordz_sample_token absl_crc32c absl_crc_internal
+            absl_crc_cpu_detect absl_crc_cord_state absl_random_distributions
+            absl_random_internal_randen absl_random_internal_randen_hwaes
+            absl_random_internal_randen_hwaes_impl absl_random_internal_randen_slow
+            absl_random_internal_seed_material absl_random_internal_platform
+            absl_random_internal_entropy_pool absl_random_seed_sequences
+            absl_random_seed_gen_exception absl_random_internal_distribution_test_util
+            absl_stacktrace absl_symbolize absl_debugging_internal
+            absl_demangle_internal absl_demangle_rust absl_decode_rust_punycode
+            absl_utf8_for_code_point absl_examine_stack absl_failure_signal_handler
+            absl_leak_check absl_die_if_null absl_strerror absl_periodic_sampler
+            absl_scoped_set_env absl_tracing_internal absl_profile_builder
+            absl_generic_printer_internal absl_poison absl_borrowed_fixup_buffer
+            absl_vlog_config_internal
+            "-framework Security"
+            "-framework CoreFoundation"
+    )
+
 elseif(WIN32)
     target_include_directories(Walnut-Networking PRIVATE
-        ${WALNUT_NET_DIR}/Platform/Windows
+            ${WALNUT_NET_DIR}/Platform/Windows
     )
-    target_link_libraries(Walnut-Networking PUBLIC Ws2_32)
+    target_link_directories(Walnut-Networking PUBLIC ${GNS_LIB_DIR})
+    target_link_libraries(Walnut-Networking PUBLIC
+            Ws2_32
+            GameNetworkingSockets
+    )
+
 elseif(UNIX)
     target_include_directories(Walnut-Networking PRIVATE
-        ${WALNUT_NET_DIR}/Platform/Linux
+            ${WALNUT_NET_DIR}/Platform/Linux
     )
+    target_link_directories(Walnut-Networking PUBLIC ${GNS_LIB_DIR})
+    target_link_libraries(Walnut-Networking PUBLIC GameNetworkingSockets)
 endif()
-
-# Link GameNetworkingSockets
-target_link_directories(Walnut-Networking PUBLIC ${GNS_LIB_DIR})
-target_link_libraries(Walnut-Networking PUBLIC GameNetworkingSockets)
